@@ -1,0 +1,66 @@
+# Hydra stuff
+hydra:
+  output_subdir: null
+  run:
+    dir: "."
+
+defaults:
+  - _self_
+  - override hydra/job_logging: disabled
+
+# Extra logging information
+logger_name: "feat_external"
+trial: "0"
+
+### Dataset
+data_root: "~/workspace/metaL_data"
+dataset: "miniImageNet"
+## Setting
+# Generalized setting (or not)
+sample_shape: "few_shot"
+fixed_db: true
+no_replacement: true
+sim_imbalance: false
+# N-way, K-shot setting
+n_way: 5
+n_shots: 5
+n_queries: 15
+
+### Model config
+## Specify model to use
+backbone_class: "resnet12"
+use_euclidean: False
+feat_dim: 640
+balance: 0
+temperature: 1.0
+temperature2: 1.0
+
+# Loading pretrained model
+model_path: "~/workspace/checkpoint/label_learn/saves"
+pretrained_model: false
+
+## Training
+train_db_size: 2800
+test_db_size: 1000
+num_workers: 4
+epochs: 5
+
+# Data augmentation
+data_aug: true
+
+# Optimization
+temperature: 32
+temperature2: 64
+lr: 0.0001
+lr_mul: 10
+lr_scheduler: "step"
+step_size: 20
+gamma: 0.2
+fix_BN: false
+mom: 0.9
+weight_decay: 0.0005
+
+### Auxiliary settings
+progress: true
+
+way: n_way

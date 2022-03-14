@@ -1,28 +1,29 @@
 import torch
 import torch.nn as nn
 import numpy as np
+from model.networks.convnet import ConvNet
+from model.networks.res12 import ResNet as ResNet12
+from model.networks.res18 import ResNet as ResNet18
+from model.networks.WRN28 import Wide_ResNet
+
 
 class FewShotModel(nn.Module):
     def __init__(self, args):
         super().__init__()
         self.args = args
         if args.backbone_class == 'ConvNet':
-            from model.networks.convnet import ConvNet
             self.encoder = ConvNet()
         elif args.backbone_class == 'Res12':
             hdim = 640
-            from model.networks.res12 import ResNet
-            self.encoder = ResNet()
+            self.encoder = ResNet12()
         elif args.backbone_class == 'Res18':
             hdim = 512
-            from model.networks.res18 import ResNet
-            self.encoder = ResNet()
+            self.encoder = ResNet18()
         elif args.backbone_class == 'WRN':
             hdim = 640
-            from model.networks.WRN28 import Wide_ResNet
             self.encoder = Wide_ResNet(28, 10, 0.5)  # we set the dropout=0.5 directly here, it may achieve better results by tunning the dropout
         else:
-            raise ValueError('')
+            raise ValueError('The backbone model does not exist')
 
     def split_instances(self, data):
         args = self.args

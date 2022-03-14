@@ -205,4 +205,4 @@ class FSLTrainer(Trainer):
                 self.trlog['max_acc_interval']))
             f.write('Test acc={:.4f} + {:.4f}\n'.format(
                 self.trlog['test_acc'],
-                self.trlog['test_acc_interval']))            
+                self.trlog['test_acc_interval']))

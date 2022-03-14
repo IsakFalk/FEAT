@@ -12,10 +12,8 @@ from model.logger import Logger
 class Trainer(object, metaclass=abc.ABCMeta):
     def __init__(self, args):
         self.args = args
-        # ensure_path(
-        #     self.args.save_path,
-        #     scripts_to_save=['model/models', 'model/networks', __file__],
-        # )
+
+        # Replace logger by our logger
         self.logger = Logger(args, osp.join(args.save_path))
 
         self.train_step = 0

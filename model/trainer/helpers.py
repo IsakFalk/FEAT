@@ -14,6 +14,7 @@ from model.models.graphnet import GCN
 from model.models.semi_feat import SemiFEAT
 from model.models.semi_protofeat import SemiProtoFEAT
 
+# NOTE: We don't use multi-GPU functionality
 class MultiGPUDataloader:
     def __init__(self, dataloader, num_device):
         self.dataloader = dataloader
@@ -39,6 +40,7 @@ class MultiGPUDataloader:
                 done = True
         return
 
+# NOTE: Replaced by our data functionality
 def get_dataloader(args):
     if args.dataset == 'MiniImageNet':
         # Handle MiniImageNet
@@ -91,7 +93,10 @@ def get_dataloader(args):
     return train_loader, val_loader, test_loader
 
 def prepare_model(args):
-    model = eval(args.model_class)(args)
+    if "feat" in args.model_class.lower():
+        model =  FEAT(args)
+    else:
+        raise(NotImplementedError)
 
     # load pre-trained model (no FC weights)
     if args.init_weights is not None:
@@ -120,7 +125,7 @@ def prepare_model(args):
 def prepare_optimizer(model, args):
     top_para = [v for k,v in model.named_parameters() if 'encoder' not in k]       
     # as in the literature, we use ADAM for ConvNet and SGD for other backbones
-    if args.backbone_class == 'ConvNet':
+    if 'conv' in args.backbone_class.lower():
         optimizer = optim.Adam(
             [{'params': model.encoder.parameters()},
              {'params': top_para, 'lr': args.lr * args.lr_mul}],
